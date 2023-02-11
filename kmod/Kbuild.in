@@ -1,0 +1,14 @@
+
+MOD_NAME := tfs_kmod
+
+obj-m += $(MOD_NAME).o
+
+$(MOD_NAME)-y := @module_cpp_objs_string@  @module_c_objs_string@
+
+cxx-prefix := " $(HOSTCXX) [M]  "
+
+%.o: %.cc
+	@echo $(cxx-prefix)$@
+	@$(HOSTCXX) $(cxxflags) -c -I@CMAKE_CURRENT_BINARY_DIR@/../lib/include $< -o $@
+
+

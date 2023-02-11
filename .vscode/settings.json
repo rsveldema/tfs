@@ -23,5 +23,6 @@
     },
     "files.associations": {
         "*.tcc": "cpp"
-    }
+    },
+    "terminal.integrated.fontFamily": "courier new"
 }

@@ -1,0 +1,13 @@
+
+MOD_NAME := tfs_kmod
+
+obj-m += $(MOD_NAME).o
+
+$(MOD_NAME)-y := tfs.o  tfs_module.o
+
+cxx-prefix := " $(HOSTCXX) [M]  "
+
+%.o: %.cc
+	$(HOSTCXX) $(cxxflags) -c -I/home/rove/Projects/tfs/kmod/../lib/include $< -o $@
+
+
