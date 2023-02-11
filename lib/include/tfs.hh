@@ -1,26 +1,23 @@
 #pragma once
 
-#include <new>
-
-#if KERNEL_MODE
-#include <linux/kernel.h>
-#include <linux/module.h>
-
-#include <cassert>
-//#define tfs_assert(x)  if (! (x)) { pr_err("kernel panic because of assertion fail: " #x); while (1) {}}
-#define tfs_assert(x)  assert(x)
-
-#else
-#include <stdlib.h>
-#include <cassert>
-
-
-#define tfs_assert(x)  assert(x)
-
-#endif
-
 typedef unsigned short int u16;
 typedef unsigned int u32;
+typedef unsigned long u64;
+
+extern "C" {
+    void tfs_panic(const char* msg);
+    void *tfs_alloc(u32 size);
+    void tfs_free(void* ptr);
+}
+
+#define tfs_assert(x)  if(!(x)) tfs_panic(#x)
+
+#if KERNEL_MODE
+void *operator new(u64 size, void*& ptr);
+#else
+#include <new>
+#endif
+
 
 #define TFS_BLOCK_SIZE (16 * 1024)
 
@@ -65,9 +62,6 @@ namespace TFS_Kernel
     };
 
     using String = Array<char>;
-
-    void *tfs_alloc(u32 size);
-    void tfs_free(void* ptr);
 
     template<typename T>
     Array<T>* alloc_array(u32 num_elts)

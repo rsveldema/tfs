@@ -4,6 +4,25 @@
 
 #include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/slab.h>
+
+
+void *tfs_alloc(u32 size)
+{
+    return kmalloc(size, GFP_USER);
+}
+
+void tfs_free(void* ptr)
+{
+    kfree(ptr);
+}
+
+
+void tfs_panic(const char* msg)
+{
+    pr_err("PANIC: %s\n", msg);
+    while (1) {}
+}
 
 static int __init module_load(void)
 {

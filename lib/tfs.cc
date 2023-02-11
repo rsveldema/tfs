@@ -1,32 +1,16 @@
 #include <tfs.hh>
 
 
-
-namespace TFS_Kernel
-{
 #if KERNEL_MODE
-    void *tfs_alloc(u32 size)
-    {
-        //return kzalloc(size);
-        return nullptr;
-    }
+void *operator new(u64 size, void*& ptr)
+{
+    return ptr;
+}
 
-    void tfs_free(void* ptr)
-    {
-        //kfree(ptr);
-    }
-#else
-    void *tfs_alloc(u32 size)
-    {
-        return malloc(size);
-    }
-
-    void tfs_free(void* ptr)
-    {
-        free(ptr);
-    }
 #endif
 
+ namespace TFS_Kernel
+{
     Array<DirEntry>* Dir::get_dir_entries()
     {
         return m_data;

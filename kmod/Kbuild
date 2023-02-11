@@ -14,18 +14,23 @@ cxx-selected-flags = $(shell echo $(KBUILD_CFLAGS) \
             | sed s/-Werror=implicit-int//g \
             | sed s/-Wdeclaration-after-statement//g \
             | sed s/-Wno-pointer-sign//g \
+            | sed s/-std=gnu89//g \
             | sed s/-Werror=incompatible-pointer-types//g \
             | sed s/-Werror=designated-init//g \
             | sed s/-std=gnu90//g )
 
 
-cxxflags = $(FLAGS) \
+
+
+cxxflags = $(FLAGS) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) \
+			$(shell echo $(KBUILD_CFLAGS_MODULE)) \
+			$(shell echo $(KBUILD_CPPFLAGS)) \
             $(cxx-selected-flags) \
             -fno-builtin \
             -nostdlib \
             -fno-rtti \
             -fno-exceptions \
-            -std=c++0x -DKERNEL_MODE
+            -std=c++0x -DKERNEL_MODE -D_LINUX_STDDEF_H
 
 %.o: %.cc
 	$(HOSTCXX) $(cxxflags) -c -I/home/rove/Projects/tfs/kmod/../lib/include $< -o $@
