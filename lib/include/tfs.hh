@@ -1,7 +1,23 @@
 #pragma once
 
 #include <new>
+
+#if KERNEL_MODE
+#include <linux/kernel.h>
+#include <linux/module.h>
+
 #include <cassert>
+//#define tfs_assert(x)  if (! (x)) { pr_err("kernel panic because of assertion fail: " #x); while (1) {}}
+#define tfs_assert(x)  assert(x)
+
+#else
+#include <stdlib.h>
+#include <cassert>
+
+
+#define tfs_assert(x)  assert(x)
+
+#endif
 
 typedef unsigned short int u16;
 typedef unsigned int u32;
@@ -32,13 +48,13 @@ namespace TFS_Kernel
 
         const T& get(u32 ix) const
         {
-            assert(ix < length);
+            tfs_assert(ix < length);
             return elts[ix];
         }
 
         T& get(u32 ix)
         {
-            assert(ix < length);
+            tfs_assert(ix < length);
             return elts[ix];
         }
 
@@ -119,7 +135,7 @@ namespace TFS_Kernel
         Array<Kernel_Block_API::BlockStorage> *m_storage_array;
         Dir* m_root = nullptr;
 
-        FileSystem(Array<Kernel_Block_API::BlockStorage> *storage_array) : m_storage_array(m_storage_array) {}
+        FileSystem(Array<Kernel_Block_API::BlockStorage> *storage_array) : m_storage_array(storage_array) {}
 
         Dir *get_root();
     };

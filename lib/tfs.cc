@@ -1,10 +1,21 @@
 #include <tfs.hh>
-#include <stdlib.h>
 
 
 
 namespace TFS_Kernel
 {
+#if KERNEL_MODE
+    void *tfs_alloc(u32 size)
+    {
+        //return kzalloc(size);
+        return nullptr;
+    }
+
+    void tfs_free(void* ptr)
+    {
+        //kfree(ptr);
+    }
+#else
     void *tfs_alloc(u32 size)
     {
         return malloc(size);
@@ -14,6 +25,7 @@ namespace TFS_Kernel
     {
         free(ptr);
     }
+#endif
 
     Array<DirEntry>* Dir::get_dir_entries()
     {
@@ -36,7 +48,7 @@ namespace TFS_Kernel
         {
             File *file = alloc<File>(0);
 
-            auto& root_storage = m_storage_array->get(0);
+            //auto& root_storage = m_storage_array->get(0);
 
             m_root = alloc<Dir>(file);
         }
