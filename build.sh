@@ -5,10 +5,10 @@ rm -rf build
 
 mkdir build
 
+cd build
+
 conan install . --install-folder cmake-build-release --build=missing
 
-
-cd build
 
 echo "running cmake"
 
