@@ -3,11 +3,12 @@
 echo "cleaning"
 rm -rf build
 
-mkdir build
 
+conan install . --install-folder cmake-build-release --build=missing
+
+mkdir build
 cd build
 
-conan install .. --install-folder cmake-build-release --build=missing
 
 
 echo "running cmake"

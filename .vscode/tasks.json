@@ -10,7 +10,8 @@
 			],
 			"group": "build",
 			"problemMatcher": [],
-			"detail": "CMake template build task"
+			"options": { "cwd": "${workspaceFolder}/build"},
+			"detail": "CMake template build task",
 		}
 	]
 }
