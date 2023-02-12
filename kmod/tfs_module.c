@@ -101,6 +101,8 @@ static struct dentry *tfs_mount_root(struct file_system_type *fs_type, int flags
 
     fs_info->magic = 0xa115e;
 
+    pr_err("trying tfs-mount-root\n");
+
     s = sget(fs_type, tfs_test_super, tfs_set_super,
             flags | SB_NOSEC, fs_info);
     if (IS_ERR(s)) {
@@ -120,7 +122,7 @@ static struct dentry *tfs_mount(struct file_system_type *fs_type, int flags,
 
     if (data ==  NULL)
     {
-        pr_err("SKIP tfs-mount %s, datea %p\n", dev_name, data);
+        pr_err("SKIP tfs-mount %s, data %p\n", dev_name, data);
         return ERR_PTR(-EINVAL);
     }
 
@@ -130,15 +132,17 @@ static struct dentry *tfs_mount(struct file_system_type *fs_type, int flags,
     if (PTR_ERR_OR_ZERO(mnt_root) == -EBUSY)
     {
         pr_err("mnt-root = busy?\n");
+        return ERR_PTR(-EINVAL);
     }
     else
     {
-        pr_err("mnt-root = OK\n");
+        pr_err("mnt-root is not busy\n");
     }
 
     if (IS_ERR(mnt_root))
     {
-        pr_err("mnt-root has error?\n");
+        pr_err("mnt-root has error - %p\n", mnt_root);
+        return ERR_PTR(-EINVAL);
     }
 
     root = mount_subtree(mnt_root, subvol_name);
