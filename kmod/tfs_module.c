@@ -52,12 +52,16 @@ static struct file_system_type tfs_root_fs_type = {
     .name = "tfs",
     .mount = tfs_mount_root,
     .kill_sb = kill_block_super,
-    .fs_flags = FS_REQUIRES_DEV,
+    .fs_flags = FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
 };
 
 static inline struct tfs_fs_info *tfs_sb(struct super_block *sb)
 {
-        return sb->s_fs_info;
+    if (sb == NULL) {
+        pr_err("null passed to tfs_sb\n");
+        return NULL;
+    }
+    return sb->s_fs_info;
 }
 
 static int tfs_test_super(struct super_block *s, void *data)
@@ -65,12 +69,17 @@ static int tfs_test_super(struct super_block *s, void *data)
 	struct tfs_fs_info *p = data;
 	struct tfs_fs_info *fs_info = tfs_sb(s);
 
+    pr_err("tfs-test-super: %p vs %p\n", p, fs_info);
+
 	return p->magic == fs_info->magic;
 }
 
 static int tfs_set_super(struct super_block *s, void *data)
 {
-	int err = set_anon_super(s, data);
+    int err;
+    pr_err("tfs-set-super: %p vs %p\n", s, data);
+
+	err = set_anon_super(s, data);
 	if (!err)
 		s->s_fs_info = data;
 	return err;
@@ -103,7 +112,7 @@ static struct dentry *tfs_mount(struct file_system_type *fs_type, int flags,
     struct dentry *root;
     const char* subvol_name = "subvol";
 
-    pr_err("tfs-mount %s\n", dev_name);
+    pr_err("tfs-mount %s, datea %p\n", dev_name, data);
     mnt_root = vfs_kern_mount(&tfs_root_fs_type, flags, dev_name, data);
     if (PTR_ERR_OR_ZERO(mnt_root) == -EBUSY)
     {
