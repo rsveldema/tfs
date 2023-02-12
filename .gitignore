@@ -9,6 +9,8 @@ cmake_install
 *.d
 build
 
+loopbackfile*
+
 # Compiled Object files
 *.slo
 *.lo

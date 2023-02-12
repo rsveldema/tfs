@@ -5,20 +5,10 @@
 using namespace Kernel_Block_API;
 using namespace TFS_Kernel;
 
-void tfs_panic(const char *msg)
-{
-    fprintf(stderr, "PANIC: %s\n", msg);
-    abort();
-}
-
-void *tfs_alloc(u32 size) { return malloc(size); }
-
-void tfs_free(void *ptr) { free(ptr); }
-
 
 TEST(FS, get_root)
 {
-    auto bs = alloc_array<Kernel_Block_API::BlockStorage>(1);
+    auto bs = alloc_array<BlockStorage>(static_cast<u32>(BlockStorageIndex::MIN_NEEDED_BLOCK_STORAGE));
     FileSystem fs(bs);
 
     Dir *d = fs.get_root();

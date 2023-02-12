@@ -13,6 +13,7 @@ set(tfs_lib_SRC tfs.cc)
 add_subdirectory(lib)
 add_subdirectory(tests)
 add_subdirectory(kmod)
+add_subdirectory(mkfs)
 
 
 

@@ -20,17 +20,13 @@ cxx-selected-flags = $(shell echo $(KBUILD_CFLAGS) \
             | sed s/-std=gnu90//g )
 
 
-
-
-cxxflags = $(FLAGS) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) \
-			$(shell echo $(KBUILD_CFLAGS_MODULE)) \
-			$(shell echo $(KBUILD_CPPFLAGS)) \
+cxxflags = $(FLAGS) \
             $(cxx-selected-flags) \
             -fno-builtin \
             -nostdlib \
             -fno-rtti \
             -fno-exceptions \
-            -std=c++0x -DKERNEL_MODE -D_LINUX_STDDEF_H
+            -std=c++0x -DKERNEL_MODE
 
 %.o: %.cc
 	$(HOSTCXX) $(cxxflags) -c -I/home/rove/Projects/tfs/kmod/../lib/include $< -o $@

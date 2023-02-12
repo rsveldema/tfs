@@ -26,15 +26,11 @@ namespace Kernel_Block_API
     struct Bio
     {
     };
-
-    struct BlockStorage
-    {
-        void submit_bio(Bio *bio);
-    };
 }
 
 namespace TFS_Kernel
 {
+    struct BlockStorage;
 
     template <typename T>
     struct Array
@@ -96,8 +92,15 @@ namespace TFS_Kernel
         File(u32 _inode_id) : m_inode_id(_inode_id)
         {}
 
-        void read(u32 offset, u32 num_bytes);
-        void write(u32 offset, u32 num_bytes, void *data);
+        void read(Array<BlockStorage> *storage_array, u32 offset, u32 num_bytes);
+        void write(Array<BlockStorage> *storage_array, u32 offset, u32 num_bytes, void *data);
+    };
+
+    struct INode
+    {
+        u32 m_file_size;
+
+        u32 get_file_size() const { return m_file_size; }
     };
 
     struct Dir
@@ -116,6 +119,18 @@ namespace TFS_Kernel
         u32 m_magic = 0xabcdef1e;
     };
 
+
+    enum class BlockStorageIndex {
+        INODE_BLOCK_STORAGE,
+        MIN_NEEDED_BLOCK_STORAGE
+    };
+
+
+    struct BlockStorage
+    {
+        INode get_as_inode(u32 inode_id);
+    };
+
     /** Disk 1:
      *     Superblock
      *     Dir root
@@ -126,10 +141,10 @@ namespace TFS_Kernel
      */
     struct FileSystem
     {
-        Array<Kernel_Block_API::BlockStorage> *m_storage_array;
+        Array<BlockStorage> *m_storage_array;
         Dir* m_root = nullptr;
 
-        FileSystem(Array<Kernel_Block_API::BlockStorage> *storage_array) : m_storage_array(storage_array) {}
+        FileSystem(Array<BlockStorage> *storage_array) : m_storage_array(storage_array) {}
 
         Dir *get_root();
     };
