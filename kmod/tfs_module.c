@@ -69,6 +69,11 @@ static int tfs_test_super(struct super_block *s, void *data)
 	struct tfs_fs_info *p = data;
 	struct tfs_fs_info *fs_info = tfs_sb(s);
 
+    if (! fs_info || ! p)
+    {
+        return 0;
+    }
+
     pr_err("tfs-test-super: %p vs %p\n", p, fs_info);
 
 	return p->magic == fs_info->magic;
@@ -82,6 +87,7 @@ static int tfs_set_super(struct super_block *s, void *data)
 	err = set_anon_super(s, data);
 	if (!err)
 		s->s_fs_info = data;
+    pr_err("tfs-set-super2: %p vs %p\n", s, data);
 	return err;
 }
 
@@ -95,14 +101,14 @@ static struct dentry *tfs_mount_root(struct file_system_type *fs_type, int flags
 
     fs_info->magic = 0xa115e;
 
-    s = sget(fs_type, tfs_test_super, tfs_set_super, flags | SB_NOSEC,
-                fs_info);
+    s = sget(fs_type, tfs_test_super, tfs_set_super,
+            flags | SB_NOSEC, fs_info);
     if (IS_ERR(s)) {
         pr_err("failed to get super block\n");
     }
 
     kfree(orig_data);
-    return NULL;
+    return ERR_PTR(-EINVAL);
 }
 
 static struct dentry *tfs_mount(struct file_system_type *fs_type, int flags,
@@ -112,8 +118,15 @@ static struct dentry *tfs_mount(struct file_system_type *fs_type, int flags,
     struct dentry *root;
     const char* subvol_name = "subvol";
 
+    if (data ==  NULL)
+    {
+        pr_err("SKIP tfs-mount %s, datea %p\n", dev_name, data);
+        return ERR_PTR(-EINVAL);
+    }
+
     pr_err("tfs-mount %s, datea %p\n", dev_name, data);
-    mnt_root = vfs_kern_mount(&tfs_root_fs_type, flags, dev_name, data);
+    mnt_root = vfs_kern_mount(&tfs_root_fs_type, flags | SB_NOSEC,
+                    dev_name, data);
     if (PTR_ERR_OR_ZERO(mnt_root) == -EBUSY)
     {
         pr_err("mnt-root = busy?\n");
