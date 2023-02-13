@@ -4,6 +4,7 @@
         "conan": {}
     },
     "include": [
-        "/home/rove/Projects/tfs/cmake-build-release/CMakePresets.json"
+        "/home/rove/Projects/tfs/cmake-build-release/CMakePresets.json",
+        "/projects/tfs/cmake-build-release/CMakePresets.json"
     ]
 }

@@ -27,8 +27,12 @@ string(APPEND CONAN_C_FLAGS " -m64")
 string(APPEND CONAN_SHARED_LINKER_FLAGS " -m64")
 string(APPEND CONAN_EXE_LINKER_FLAGS " -m64")
 
-add_compile_definitions(_GLIBCXX_USE_CXX11_ABI=0)
 
+
+message(STATUS "Conan toolchain: C++ Standard 17 with extensions ON")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Extra c, cxx, linkflags and defines
 
@@ -61,16 +65,15 @@ list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 # Definition of CMAKE_PREFIX_PATH, CMAKE_XXXXX_PATH
 # The Conan local "generators" folder, where this toolchain is saved.
 list(PREPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR} )
-list(PREPEND CMAKE_PROGRAM_PATH "/home/rove/.conan/data/gtest/cci.20210126/_/_/package/473fac5a451159bef91e2252b31a075ead43201f/bin")
-list(PREPEND CMAKE_LIBRARY_PATH "/home/rove/.conan/data/gtest/cci.20210126/_/_/package/473fac5a451159bef91e2252b31a075ead43201f/lib")
-list(PREPEND CMAKE_INCLUDE_PATH "/home/rove/.conan/data/gtest/cci.20210126/_/_/package/473fac5a451159bef91e2252b31a075ead43201f/include")
+list(PREPEND CMAKE_LIBRARY_PATH "/home/rove/.conan2/p/gtestf3d5edfee97f0/p/lib")
+list(PREPEND CMAKE_INCLUDE_PATH "/home/rove/.conan2/p/gtestf3d5edfee97f0/p/include")
 
 
 
 if (DEFINED ENV{PKG_CONFIG_PATH})
-set(ENV{PKG_CONFIG_PATH} "/home/rove/Projects/tfs/cmake-build-release:$ENV{PKG_CONFIG_PATH}")
+set(ENV{PKG_CONFIG_PATH} "/projects/tfs/cmake-build-release:$ENV{PKG_CONFIG_PATH}")
 else()
-set(ENV{PKG_CONFIG_PATH} "/home/rove/Projects/tfs/cmake-build-release:")
+set(ENV{PKG_CONFIG_PATH} "/projects/tfs/cmake-build-release:")
 endif()
 
 

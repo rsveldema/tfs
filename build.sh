@@ -4,7 +4,9 @@ echo "cleaning"
 rm -rf build
 
 
-conan install . --install-folder cmake-build-release --build=missing
+#conan install . --install-folder cmake-build-release --build=missing
+conan profile detect
+conan install . -of cmake-build-release --build=missing
 
 mkdir build
 cd build

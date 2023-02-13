@@ -29,7 +29,7 @@ cxxflags = $(FLAGS) \
             -std=c++0x -DKERNEL_MODE
 
 %.o: %.cc
-	$(HOSTCXX) $(cxxflags) -c -I/home/rove/Projects/tfs/kmod/../lib/include $< -o $@
+	$(HOSTCXX) $(cxxflags) -c -I/projects/tfs/kmod/../lib/include $< -o $@
 	@echo -n > $$(dirname $@)/.$$(basename $@).cmd
 
 

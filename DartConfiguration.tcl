@@ -4,14 +4,14 @@
 
 
 # Configuration directories and files
-SourceDirectory: /home/rove/Projects/tfs
-BuildDirectory: /home/rove/Projects/tfs
+SourceDirectory: /projects/tfs
+BuildDirectory: /projects/tfs
 
 # Where to place the cost data store
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: rove-XPS-15-9560
+Site: localhost.localdomain
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Linux-c++
@@ -21,12 +21,13 @@ LabelsForSubprojects:
 
 # Submission information
 SubmitURL: http://
+SubmitInactivityTimeout: 
 
 # Dashboard start time
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/bin/cmake" "/home/rove/Projects/tfs"
+ConfigureCommand: "/usr/bin/cmake" "/projects/tfs"
 MakeCommand: /usr/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
@@ -62,8 +63,8 @@ UpdateOptions:
 UpdateType: 
 
 # Compiler info
-Compiler: /usr/bin/c++
-CompilerVersion: 11.3.0
+Compiler: /usr/lib64/ccache/c++
+CompilerVersion: 12.2.1
 
 # Dynamic analysis (MemCheck)
 PurifyCommand: 
@@ -75,12 +76,12 @@ CudaSanitizerCommand:
 CudaSanitizerCommandOptions: 
 MemoryCheckType: 
 MemoryCheckSanitizerOptions: 
-MemoryCheckCommand: MEMORYCHECK_COMMAND-NOTFOUND
+MemoryCheckCommand: /bin/valgrind
 MemoryCheckCommandOptions: 
 MemoryCheckSuppressionFile: 
 
 # Coverage
-CoverageCommand: /usr/bin/gcov
+CoverageCommand: /bin/gcov
 CoverageExtraFlags: -l
 
 # Testing options
