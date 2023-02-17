@@ -8,6 +8,7 @@ cmake_install
 # Prerequisites
 *.d
 build
+cmake-build-release
 
 loopbackfile*
 
