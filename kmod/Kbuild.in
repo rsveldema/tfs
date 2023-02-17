@@ -29,7 +29,7 @@ cxxflags = $(FLAGS) \
             -std=c++0x -DKERNEL_MODE
 
 %.o: %.cc
-	$(HOSTCXX) $(cxxflags) -c -I@CMAKE_CURRENT_BINARY_DIR@/../lib/include $< -o $@
+	$(HOSTCXX) $(cxxflags) -c -I@CMAKE_CURRENT_SOURCE_DIR@/../lib/include $< -o $@
 	@echo -n > $$(dirname $@)/.$$(basename $@).cmd
 
 

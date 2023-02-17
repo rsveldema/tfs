@@ -18,8 +18,8 @@
                 "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
                 "CMAKE_BUILD_TYPE": "Release"
             },
-            "toolchainFile": "/projects/tfs/cmake-build-release/conan_toolchain.cmake",
-            "binaryDir": "/projects/tfs/cmake-build-release"
+            "toolchainFile": "/home/rove/Projects/tfs/cmake-build-release/conan_toolchain.cmake",
+            "binaryDir": "/home/rove/Projects/tfs/cmake-build-release"
         }
     ],
     "buildPresets": [

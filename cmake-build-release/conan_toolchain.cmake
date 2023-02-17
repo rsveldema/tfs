@@ -65,15 +65,15 @@ list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 # Definition of CMAKE_PREFIX_PATH, CMAKE_XXXXX_PATH
 # The Conan local "generators" folder, where this toolchain is saved.
 list(PREPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR} )
-list(PREPEND CMAKE_LIBRARY_PATH "/home/rove/.conan2/p/gtestf3d5edfee97f0/p/lib")
-list(PREPEND CMAKE_INCLUDE_PATH "/home/rove/.conan2/p/gtestf3d5edfee97f0/p/include")
+list(PREPEND CMAKE_LIBRARY_PATH "/home/rove/.conan2/p/gtest43a80f88ed9da/p/lib")
+list(PREPEND CMAKE_INCLUDE_PATH "/home/rove/.conan2/p/gtest43a80f88ed9da/p/include")
 
 
 
 if (DEFINED ENV{PKG_CONFIG_PATH})
-set(ENV{PKG_CONFIG_PATH} "/projects/tfs/cmake-build-release:$ENV{PKG_CONFIG_PATH}")
+set(ENV{PKG_CONFIG_PATH} "/home/rove/Projects/tfs/cmake-build-release:$ENV{PKG_CONFIG_PATH}")
 else()
-set(ENV{PKG_CONFIG_PATH} "/projects/tfs/cmake-build-release:")
+set(ENV{PKG_CONFIG_PATH} "/home/rove/Projects/tfs/cmake-build-release:")
 endif()
 
 

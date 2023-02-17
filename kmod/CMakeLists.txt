@@ -23,6 +23,18 @@ string(REPLACE ".c" ".o" module_c_objs_string "${module_sources}")
 
 configure_file(Kbuild.in Kbuild @ONLY)
 
+message("creating symlinks")
+foreach(file "${module_sources}")
+    message("mod linking ${CMAKE_CURRENT_SOURCE_DIR}/${file} ${CMAKE_CURRENT_BINARY_DIR}/${file}")
+    file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/${file} ${CMAKE_CURRENT_BINARY_DIR}/${file})
+endforeach()
+
+foreach(file  "${tfs_lib_SRC}")
+    message("c++ linking ${CMAKE_CURRENT_SOURCE_DIR}/../lib/${file} ${CMAKE_CURRENT_BINARY_DIR}/${file}")
+    file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/../lib/${file} ${CMAKE_CURRENT_BINARY_DIR}/${file})
+endforeach()
+
+
 
 set(module_cmd ${CMAKE_MAKE_PROGRAM} V=1 -C ${kerneldir} M=${CMAKE_CURRENT_BINARY_DIR})
 add_custom_command(OUTPUT tfs_module.ko
