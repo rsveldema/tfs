@@ -1,10 +1,14 @@
 
+
+message(INFO "yocto = ${yocto}")
+
 set(kerneldir "" CACHE STRING "Path to the kernel build directory")
 if("${kerneldir}" STREQUAL "")
   execute_process(COMMAND uname -r OUTPUT_VARIABLE uname_r
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
   set(kerneldir "/lib/modules/${uname_r}/build")
 endif()
+
 find_file(kernel_makefile NAMES Makefile
                           PATHS ${kerneldir} NO_DEFAULT_PATH)
 if(NOT kernel_makefile)
@@ -33,7 +37,6 @@ foreach(file  "${tfs_lib_SRC}")
     message("c++ linking ${CMAKE_CURRENT_SOURCE_DIR}/../lib/${file} ${CMAKE_CURRENT_BINARY_DIR}/${file}")
     file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/../lib/${file} ${CMAKE_CURRENT_BINARY_DIR}/${file})
 endforeach()
-
 
 
 set(module_cmd ${CMAKE_MAKE_PROGRAM} V=1 -C ${kerneldir} M=${CMAKE_CURRENT_BINARY_DIR})
