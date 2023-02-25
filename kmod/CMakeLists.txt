@@ -28,7 +28,7 @@ string(REPLACE ".c" ".o" module_c_objs_string "${module_sources}")
 if("${yocto}" STREQUAL "")
   configure_file(Kbuild.in Kbuild @ONLY)
 else()
-  configure_file(KMakefile.in makefile @ONLY)
+  configure_file(KMakefile.in Makefile @ONLY)
 endif()
 
 message("creating symlinks")
