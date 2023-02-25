@@ -10,10 +10,16 @@ set(TFS_VERSION 1.0)
 
 set(tfs_lib_SRC tfs.cc)
 
-add_subdirectory(lib)
-add_subdirectory(tests)
-add_subdirectory(kmod)
-add_subdirectory(mkfs)
+message(INFO "yocto = ${yocto}")
+
+if("${yocto}" STREQUAL "")
+    add_subdirectory(kmod)
+else()
+    add_subdirectory(lib)
+    add_subdirectory(tests)
+    add_subdirectory(kmod)
+    add_subdirectory(mkfs)
+endif()
 
 
 
