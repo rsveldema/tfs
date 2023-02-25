@@ -13,12 +13,12 @@ set(tfs_lib_SRC tfs.cc)
 message(INFO "yocto = ${yocto}")
 
 if("${yocto}" STREQUAL "")
-    add_subdirectory(kmod)
+  add_subdirectory(lib)
+  add_subdirectory(tests)
+  add_subdirectory(kmod)
+  add_subdirectory(mkfs)
 else()
-    add_subdirectory(lib)
-    add_subdirectory(tests)
-    add_subdirectory(kmod)
-    add_subdirectory(mkfs)
+  add_subdirectory(kmod)
 endif()
 
 
