@@ -18,6 +18,7 @@ if("${yocto}" STREQUAL "")
   add_subdirectory(kmod)
   add_subdirectory(mkfs)
 else()
+  configure_file(KMakefile.in Makefile @ONLY)
   add_subdirectory(kmod)
 endif()
 
