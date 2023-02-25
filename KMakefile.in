@@ -3,3 +3,8 @@
 all:
 	cd kmod && $(MAKE)
 
+modules_install:
+	cd kmod && $(MAKE) modules_install
+
+clean:
+	cd kmod && $(MAKE) clean
