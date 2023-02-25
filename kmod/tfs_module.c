@@ -159,6 +159,7 @@ static struct dentry *tfs_mount_root(struct file_system_type *fs_type, int flags
     struct tfs_fs_info *fs_info = kzalloc(sizeof(*fs_info), GFP_KERNEL);
 	struct super_block *s;
     struct inode *inode;
+    struct dentry *root_dir = NULL;
 
     fs_info->magic = 0xa115e;
 
@@ -171,14 +172,25 @@ static struct dentry *tfs_mount_root(struct file_system_type *fs_type, int flags
     }
 
     kfree(orig_data);
-
-    pr_err("trying tfs-mount-root %p\n", s->s_root);
+ 
+    pr_err("trying tfs-mount-root1 %p\n", s);
+    if (! s)
+    {
+        return ERR_PTR(-EINVAL);
+    }
 
     inode = tfs_iget(s, fs_info, TFS_FIRST_INODE_ID);
 
-    s->s_root = d_make_root(inode);
+    pr_err("trying tfs-mount-root-inode %p\n", inode);
 
-    return dget(s->s_root);
+    s->s_root = d_make_root(inode);
+	s->s_flags |= SB_ACTIVE;
+
+    pr_err("trying tfs-mount-root2 %p\n", s->s_root);
+
+    root_dir = dget(s->s_root);
+    pr_err("trying tfs-mount-root3 %p\n", root_dir);
+    return root_dir;
 }
 
 static struct dentry *tfs_mount(struct file_system_type *fs_type, int flags,
@@ -186,13 +198,16 @@ static struct dentry *tfs_mount(struct file_system_type *fs_type, int flags,
 {
     struct vfsmount *mnt_root;
     struct dentry *root;
-    const char* subvol_name = "subvol";
+    char* subvol_name;
 
-    if (data ==  NULL)
+    if (data == NULL)
     {
         pr_err("SKIP tfs-mount %s, data %p\n", dev_name, data);
         return ERR_PTR(-EINVAL);
     }
+
+    subvol_name = kzalloc(32, GFP_KERNEL);
+    strcpy(subvol_name, "subvol");
 
     pr_err("tfs-mount %s, datea %p\n", dev_name, data);
     mnt_root = vfs_kern_mount(&tfs_root_fs_type, flags | SB_NOSEC,
@@ -204,7 +219,7 @@ static struct dentry *tfs_mount(struct file_system_type *fs_type, int flags,
     }
     else
     {
-        pr_err("mnt-root is not busy\n");
+        pr_err("mnt-root is not busy: %p\n", mnt_root);
     }
 
     if (IS_ERR(mnt_root))
@@ -214,6 +229,13 @@ static struct dentry *tfs_mount(struct file_system_type *fs_type, int flags,
     }
 
     root = mount_subtree(mnt_root, subvol_name);
+    pr_err("mnt-root-subtree ret %p\n", root);
+    if (IS_ERR(root))
+    {
+        may_umount(mnt_root);
+		//deactivate_locked_super(s);
+        return ERR_PTR(-EINVAL);
+    }
     return root;
 }
 
