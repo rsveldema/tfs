@@ -25,8 +25,11 @@ string(REPLACE ";" " " module_sources_string "${module_sources}")
 string(REPLACE ".cc" ".o" module_cpp_objs_string "${tfs_lib_SRC}")
 string(REPLACE ".c" ".o" module_c_objs_string "${module_sources}")
 
-
-configure_file(Kbuild.in Kbuild @ONLY)
+if("${yocto}" STREQUAL "")
+  configure_file(Kbuild.in Kbuild @ONLY)
+else()
+  configure_file(KMakefile.in makefile @ONLY)
+endif()
 
 message("creating symlinks")
 foreach(file "${module_sources}")
