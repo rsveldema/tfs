@@ -5,26 +5,28 @@ obj-m += $(MOD_NAME).o
 
 $(MOD_NAME)-y := @module_cpp_objs_string@  @module_c_objs_string@
 
+cxx-prefix := " $(HOSTCXX) [M]  "
+
 cxx-selected-flags = $(shell echo $(KBUILD_CFLAGS) \
-            | sed s/-D\"KBUILD.\"//g \
-            | sed s/-Werror=strict-prototypes//g \
-            | sed s/-Werror=implicit-function-declaration//g \
-            | sed s/-Werror=implicit-int//g \
-            | sed s/-Wdeclaration-after-statement//g \
-            | sed s/-Wno-pointer-sign//g \
-            | sed s/-std=gnu89//g \
-            | sed s/-Werror=incompatible-pointer-types//g \
-            | sed s/-Werror=designated-init//g \
-            | sed s/-std=gnu90//g )
+			| sed s/-D\"KBUILD.\"//g \
+			| sed s/-Werror=strict-prototypes//g \
+			| sed s/-Werror=implicit-function-declaration//g \
+			| sed s/-Werror=implicit-int//g \
+			| sed s/-Wdeclaration-after-statement//g \
+			| sed s/-Wno-pointer-sign//g \
+			| sed s/-std=gnu89//g \
+			| sed s/-Werror=incompatible-pointer-types//g \
+			| sed s/-Werror=designated-init//g \
+			| sed s/-std=gnu90//g )
 
 
 cxxflags = $(FLAGS) \
-            $(cxx-selected-flags) \
-            -fno-builtin \
-            -nostdlib \
-            -fno-rtti \
-            -fno-exceptions \
-            -std=c++0x -DKERNEL_MODE
+			$(cxx-selected-flags) \
+			-fno-builtin \
+			-nostdlib \
+			-fno-rtti \
+			-fno-exceptions \
+			-std=c++0x -DKERNEL_MODE
 
 %.o: %.cc
 	$(HOSTCXX) $(cxxflags) -c -I@CMAKE_CURRENT_SOURCE_DIR@/../lib/include $< -o $@
@@ -34,12 +36,12 @@ cxxflags = $(FLAGS) \
 SRC := $(shell pwd)
 
 all:
-    $(MAKE) -C $(KERNEL_SRC) M=$(SRC)
+	$(MAKE) -C $(KERNEL_SRC) M=$(SRC)
 
 modules_install:
-    $(MAKE) -C $(KERNEL_SRC) M=$(SRC) modules_install
+	$(MAKE) -C $(KERNEL_SRC) M=$(SRC) modules_install
 
 clean:
-    rm -f *.o *~ core .depend .*.cmd *.ko *.mod.c
-    rm -f Module.markers Module.symvers modules.order
-    rm -rf .tmp_versions Modules.symvers
+	rm -f *.o *~ core .depend .*.cmd *.ko *.mod.c
+	rm -f Module.markers Module.symvers modules.order
+	rm -rf .tmp_versions Modules.symvers
