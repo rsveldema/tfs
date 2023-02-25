@@ -8,7 +8,7 @@ endif()
 find_file(kernel_makefile NAMES Makefile
                           PATHS ${kerneldir} NO_DEFAULT_PATH)
 if(NOT kernel_makefile)
-  message(FATAL_ERROR "There is no Makefile in kerneldir!")
+  message(FATAL_ERROR "There is no Makefile in ${kerneldir}")
 endif()
 
 message(INFO "current kernel at ${kernel_makefile}")
