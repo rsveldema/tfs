@@ -2,6 +2,7 @@
 
 all:
 	cd kmod && $(MAKE)
+	cp kmod/tfs_kmod.ko tfs-kmod.ko
 
 modules_install:
 	cd kmod && $(MAKE) modules_install
