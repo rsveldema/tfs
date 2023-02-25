@@ -92,16 +92,77 @@ static int tfs_set_super(struct super_block *s, void *data)
 }
 
 
+#define TFS_FIRST_INODE_ID      256
+
+
+struct tfs_key
+{
+    u64 inode_num;
+};
+
+typedef struct tfs_key tfs_iget_args;
+
+struct tfs_inode
+{
+	struct inode vfs_inode;
+	struct tfs_key location;
+};
+
+static inline struct tfs_inode *TFS_I(const struct inode *inode)
+{
+	return container_of(inode, struct tfs_inode, vfs_inode);
+}
+
+
+
+static int tfs_find_actor(struct inode *inode, void *opaque)
+{
+	tfs_iget_args *args = opaque;
+
+	return args->inode_num == TFS_I(inode)->location.inode_num; // &&
+		//args->root == TFS_I(inode)->root;
+}
+
+static u64 tfs_inode_hash(u64 inode_num)
+{
+    return inode_num;
+}
+
+static int tfs_init_locked_inode(struct inode *inode, void *opaque)
+{
+	tfs_iget_args *args = opaque;
+
+	inode->i_ino = args->inode_num;
+    return 0;
+}
+
+
+struct inode* tfs_iget(struct super_block *s, struct tfs_fs_info *fs_info, u64 inode_num)
+{
+	tfs_iget_args args;
+	struct inode *inode;
+	unsigned long hashval = tfs_inode_hash(inode_num);
+
+    args.inode_num = inode_num;
+
+	inode = iget5_locked(s, hashval, tfs_find_actor,
+			     tfs_init_locked_inode,
+			     (void *)&args);
+	return inode;
+}
+
+
 static struct dentry *tfs_mount_root(struct file_system_type *fs_type, int flags,
                                 const char *dev_name, void *data)
 {
     char *orig_data = kstrdup(data, GFP_KERNEL);
     struct tfs_fs_info *fs_info = kzalloc(sizeof(*fs_info), GFP_KERNEL);
 	struct super_block *s;
+    struct inode *inode;
 
     fs_info->magic = 0xa115e;
 
-    pr_err("trying tfs-mount-root\n");
+    pr_err("trying tfs-mount-root: %p\n", fs_info);
 
     s = sget(fs_type, tfs_test_super, tfs_set_super,
             flags | SB_NOSEC, fs_info);
@@ -110,7 +171,14 @@ static struct dentry *tfs_mount_root(struct file_system_type *fs_type, int flags
     }
 
     kfree(orig_data);
-    return ERR_PTR(-EINVAL);
+
+    pr_err("trying tfs-mount-root %p\n", s->s_root);
+
+    inode = tfs_iget(s, fs_info, TFS_FIRST_INODE_ID);
+
+    s->s_root = d_make_root(inode);
+
+    return dget(s->s_root);
 }
 
 static struct dentry *tfs_mount(struct file_system_type *fs_type, int flags,
